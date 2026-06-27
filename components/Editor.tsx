@@ -6,13 +6,13 @@ import { DEFAULT_STAT_KEYS } from "@/lib/format";
 type Ratio = "story" | "square";
 type Theme = "dark" | "light";
 type Units = "metric" | "imperial";
-type MapStyle = "dark" | "light" | "streets" | "outdoors" | "satellite";
+type MapStyle = "dark" | "light" | "outdoors" | "terrain" | "satellite";
 
 const MAP_STYLES: { value: MapStyle; label: string }[] = [
   { value: "dark", label: "Dark" },
   { value: "light", label: "Light" },
-  { value: "streets", label: "Streets" },
   { value: "outdoors", label: "Outdoors" },
+  { value: "terrain", label: "Terrain" },
   { value: "satellite", label: "Satellite" },
 ];
 

@@ -56,7 +56,7 @@ export default async function Home({
         </Link>
       )}
 
-      <p className="text-xs text-neutral-600">Powered by Strava · Maps © Mapbox © OpenStreetMap</p>
+      <p className="text-xs text-neutral-600">Powered by Strava · Maps © Stadia Maps © OpenStreetMap</p>
     </main>
   );
 }

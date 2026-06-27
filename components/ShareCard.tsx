@@ -1,5 +1,6 @@
 import type { Stat } from "@/lib/format";
 import { FONT_FAMILY } from "@/lib/fonts";
+import { routeToSvgPath, type LatLng } from "@/lib/polyline";
 
 export type Theme = "dark" | "light";
 
@@ -8,8 +9,10 @@ export interface ShareCardProps {
   dateLabel: string;
   athleteName?: string;
   stats: Stat[];
-  /** Data URI of the route-on-map image, or null when the ride has no GPS route. */
+  /** Data URI of the route-on-map image (real base map), or null. */
   mapDataUri: string | null;
+  /** Decoded route coordinates, used to draw a keyless route when there's no base map. */
+  routeCoords?: LatLng[] | null;
   theme: Theme;
   width: number;
   height: number;
@@ -46,6 +49,7 @@ export function ShareCard({
   athleteName,
   stats,
   mapDataUri,
+  routeCoords,
   theme,
   width,
   height,
@@ -54,6 +58,10 @@ export function ShareCard({
   const pad = Math.round(width * 0.06);
   const mapHeight = Math.round(height * (height >= width ? 0.6 : 0.52));
   const tileBasis = stats.length <= 4 ? "46%" : "30%";
+
+  const hasRoute = Boolean(routeCoords && routeCoords.length > 1);
+  // Keyless route path (only used when there's no base-map image).
+  const routePathD = !mapDataUri && hasRoute ? routeToSvgPath(routeCoords!, width, mapHeight, pad) : "";
 
   return (
     <div
@@ -99,7 +107,24 @@ export function ShareCard({
         >
           Ride
         </div>
-        {!mapDataUri && (
+        {!mapDataUri && routePathD ? (
+          <svg
+            width={width}
+            height={mapHeight}
+            viewBox={`0 0 ${width} ${mapHeight}`}
+            style={{ position: "absolute", top: 0, left: 0 }}
+          >
+            <path
+              d={routePathD}
+              fill="none"
+              stroke={STRAVA}
+              strokeWidth={Math.round(width * 0.009)}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+            />
+          </svg>
+        ) : null}
+        {!mapDataUri && !routePathD && (
           <div
             style={{
               display: "flex",
